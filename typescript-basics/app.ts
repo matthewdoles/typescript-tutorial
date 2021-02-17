@@ -1,22 +1,28 @@
-const person: {
-  name: string;
-  age: number;
-  hobbies: string[];
-  role: [number, string];
-} = {
-  name: 'Matthew',
-  age: 25,
-  hobbies: ['Sports', 'Cooking'],
-  role: [2, 'author'],
-};
+type Combinable = number | string;
+type ConversionDescriptor = 'as-number' | 'as-text';
 
-console.log(person);
-for (const hobby of person.hobbies) {
-  // string methods available to array of strings
-  console.log(hobby.toUpperCase());
+function combine(
+  input1: Combinable,
+  input2: Combinable,
+  resultConversion: ConversionDescriptor
+) {
+  let result;
+  if (
+    (typeof input1 === 'number' && typeof input2 === 'number') ||
+    resultConversion === 'as-number'
+  ) {
+    result = +input1 + +input2;
+  } else {
+    result = input1.toString() + input2.toString();
+  }
+  return result;
 }
 
-// any array example
-let anyArray: any[];
-anyArray = ['sports', 34, false];
-console.log(anyArray);
+const combineAges = combine(30, 26, 'as-number');
+console.log(combineAges);
+
+const combineStringAges = combine('30', '26', 'as-number');
+console.log(combineStringAges);
+
+const combineNames = combine('Matthew', 'Max', 'as-text');
+console.log(combineNames);

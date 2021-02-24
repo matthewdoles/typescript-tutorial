@@ -46,8 +46,8 @@ activeHobbies.push(...hobbies);
 
 // objects & spread operator
 const person = {
-  name: 'Matthew',
-  age: 25,
+  firstName: 'Matthew',
+  personAge: 25,
 };
 
 const copiedPerson = { ...person };
@@ -60,3 +60,11 @@ const addRestParameters = (...numbers: number[]) => {
 };
 
 printOutput(addRestParameters(5, 10, 2, 3.7));
+
+// array destructuring
+const [hobby1, hobby2, ...remainingHobbies] = hobbies;
+console.log(hobbies, hobby1, hobby2);
+
+// object destucturing
+const { firstName: personName, personAge } = person;
+console.log(person, personName, personAge);

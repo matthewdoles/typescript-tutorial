@@ -29,3 +29,34 @@ if (button) {
 }
 
 printOutput(addOneExpressionNew(2, 5));
+
+// default parameters
+const addDefaultParameter = (a: number, b: number = 6) => {
+  return a + b;
+};
+
+printOutput(addDefaultParameter(5));
+
+// arrays & spread operator
+const hobbies = ['Sports', 'Cooking'];
+
+const activeHobbies = [...hobbies, 'Hiking'];
+// or
+activeHobbies.push(...hobbies);
+
+// objects & spread operator
+const person = {
+  name: 'Matthew',
+  age: 25,
+};
+
+const copiedPerson = { ...person };
+
+// rest parameters
+const addRestParameters = (...numbers: number[]) => {
+  return numbers.reduce((currResult, currValue) => {
+    return currResult + currValue;
+  }, 0);
+};
+
+printOutput(addRestParameters(5, 10, 2, 3.7));

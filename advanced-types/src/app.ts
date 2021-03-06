@@ -20,12 +20,39 @@ type Combinable = string | number;
 type Numeric = number | boolean;
 type Universal = Combinable & Numeric;
 
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+function add(a: number, b: string): string;
+function add(a: string, b: number): string;
 function add(a: Combinable, b: Combinable) {
   if (typeof a === 'string' || typeof b === 'string') {
     return a.toString() + b.toString();
   }
   return a + b;
 }
+
+const result = add('Matthew', ' Doles');
+result.split(' ');
+console.log(result);
+
+const fetchedUserData = {
+  id: 'u1',
+  name: 'Matthew',
+  job: {
+    title: 'Developer',
+    description: 'Writes code',
+  },
+};
+
+console.log(fetchedUserData?.job?.title);
+
+const userInput = '';
+
+const storedData = userInput || 'DEFAULT';
+console.log(storedData);
+
+const storedDataNulllCoalescing = userInput ?? 'DEFAULT';
+console.log(storedDataNulllCoalescing);
 
 type UnknownEmployee = Employee | Admin;
 

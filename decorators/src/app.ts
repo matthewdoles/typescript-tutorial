@@ -89,3 +89,113 @@ class Product {
 
 const p1 = new Product('Book 1', 19.99);
 const p2 = new Product('Book 2', 14.99);
+
+function AutoBind(
+  _target: any,
+  _methodName: string,
+  descriptor: PropertyDescriptor
+) {
+  const originalMethod = descriptor.value;
+  const adjustedDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      const boundFn = originalMethod.bind(this);
+      return boundFn;
+    },
+  };
+
+  return adjustedDescriptor;
+}
+
+class Printer {
+  message = 'This works!';
+
+  @AutoBind
+  showMessage() {
+    console.log(this.message);
+  }
+}
+
+const p = new Printer();
+
+const button = document.querySelector('button')!;
+button.addEventListener('click', p.showMessage);
+
+interface ValidatorConfig {
+  [property: string]: {
+    [validatableProp: string]: string[];
+  };
+}
+
+const registeredValidators: ValidatorConfig = {};
+
+function Required(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: [
+      ...registeredValidators[target.constructor.name][propName],
+      'required',
+    ],
+  };
+}
+
+function PositiveNumber(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: [
+      ...registeredValidators[target.constructor.name][propName],
+      'positive',
+    ],
+  };
+}
+
+function validate(obj: any) {
+  const objectValidatorConfig = registeredValidators[obj.constructor.name];
+  if (!objectValidatorConfig) {
+    return true;
+  }
+  let isValid = true;
+  for (const prop in objectValidatorConfig) {
+    for (const validator of objectValidatorConfig[prop]) {
+      switch (validator) {
+        case 'required':
+          isValid = isValid && !!obj[prop];
+          break;
+        case 'positive':
+          isValid = isValid && obj[prop] > 0;
+          break;
+      }
+    }
+  }
+  return isValid;
+}
+
+class Course {
+  @Required
+  title: string;
+  @PositiveNumber
+  price: number;
+
+  constructor(t: string, p: number) {
+    this.title = t;
+    this.price = p;
+  }
+}
+
+const courseForm = document.querySelector('form')!;
+courseForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const titleEl = document.getElementById('title') as HTMLInputElement;
+  const priceEl = document.getElementById('price') as HTMLInputElement;
+
+  const title = titleEl.value;
+  const price = +priceEl.value;
+
+  const createdCourse = new Course(title, price);
+  if (!validate(createdCourse)) {
+    alert('Invalid iunput, please try again');
+    return;
+  }
+  console.log(createdCourse);
+});

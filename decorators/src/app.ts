@@ -6,14 +6,20 @@ function Logger(logString: string) {
 }
 
 function WithTemplate(template: string, hookId: string) {
-  return function (constructor: any) {
-    console.log('Rendering template');
-    const hookEl = document.getElementById(hookId);
-    const p = new constructor();
-    if (hookEl) {
-      hookEl.innerHTML = template;
-      hookEl.querySelector('h2')!.textContent = p.name;
-    }
+  return function <T extends { new (...args: any[]): { name: string } }>(
+    originalConstructor: T
+  ) {
+    return class extends originalConstructor {
+      constructor(..._args: any[]) {
+        super();
+        console.log('Rendering template');
+        const hookEl = document.getElementById(hookId);
+        if (hookEl) {
+          hookEl.innerHTML = template;
+          hookEl.querySelector('h2')!.textContent = this.name;
+        }
+      }
+    };
   };
 }
 
@@ -80,3 +86,6 @@ class Product {
     return this._price * (1 + tax);
   }
 }
+
+const p1 = new Product('Book 1', 19.99);
+const p2 = new Product('Book 2', 14.99);

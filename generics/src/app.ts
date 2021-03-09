@@ -77,3 +77,25 @@ numberStorage.addItem(5);
 numberStorage.addItem(8);
 numberStorage.removeItem(8);
 console.log(textStorage.getItems());
+
+// Generic Utility Types
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCouseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+
+const readonlyNames: Readonly<string[]> = ['Matthew', 'Max'];
+//readonlyNames.push('Jordan');

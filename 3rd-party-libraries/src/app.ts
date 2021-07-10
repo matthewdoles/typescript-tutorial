@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import 'reflect-metadata';
 import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
 import { Product } from './product.model';
 
 declare var GLOBAL: string;
@@ -30,3 +31,14 @@ const toClassProducts = plainToClass(Product, products);
 for (const prod of toClassProducts) {
   console.log(prod.getInformation());
 }
+
+// validating classes
+const newPrd = new Product('', -5.99);
+validate(newPrd).then((errors) => {
+  if (errors.length > 0) {
+    console.log('VALIDATION ERRORS!');
+    console.log(errors);
+  } else {
+    console.log(newPrd.getInformation());
+  }
+});
